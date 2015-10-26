@@ -245,6 +245,53 @@ namespace Stateless
         }
 
         /// <summary>
+        /// A string representation of the state machine.
+        /// </summary>
+        /// <param name="formatter">An implementation of IStringFormatter.</param>
+        /// <returns>The result of formatter.ToString()</returns>
+        public string ToString(IStringFormatter formatter)
+        {
+            foreach (var transition in InternalTransitions()) {
+                var source = transition.Item1;
+                var trigger = transition.Item2;
+                var guardMethodName = transition.Item3.Method.Name;
+                var guardMethodNamespace = transition.Item3.Method.DeclaringType.Namespace;
+                var destination = transition.Item4;
+                formatter.Add(source.ToString(),
+                              trigger.ToString(),
+                              guardMethodName,
+                              guardMethodNamespace,
+                              destination.ToString()
+                );
+            }
+
+            return formatter.ToString();
+        }
+
+        /// <summary>
+        /// Returns all transitions except those defined with PermitDynamic.
+        /// </summary>
+        /// <returns>A dictionary that maps source state and trigger with a destination state.</returns>
+        IList<Tuple<TState,TTrigger,Func<bool>,TState>> InternalTransitions()
+        {
+            var transitions = new List<Tuple<TState,TTrigger,Func<bool>,TState>>();
+
+            foreach (var stateCfg in _stateConfiguration) {
+                TState source = stateCfg.Key;
+                foreach (var behaviours in stateCfg.Value._triggerBehaviours) {
+                    foreach (TransitioningTriggerBehaviour behaviour in behaviours.Value.Where(b => b is TransitioningTriggerBehaviour)) {
+                        TTrigger trigger = behaviour._trigger;
+                        Func<bool> guard = behaviour._guard;
+                        TState destination = behaviour._destination;
+                        transitions.Add(Tuple.Create(source, trigger, guard, destination));
+                    }
+                }
+            }
+
+            return transitions;
+        }
+
+        /// <summary>
         /// Specify the arguments that must be supplied when a specific trigger is fired.
         /// </summary>
         /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
