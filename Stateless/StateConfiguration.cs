@@ -145,7 +145,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntry(
                     t => entryAction(),
-                    entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    entryActionDescription);
             }
 
             /// <summary>
@@ -160,7 +160,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 _representation.AddEntryAction(
                     (t, args) => entryAction(t),
-                    entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    entryActionDescription);
                 return this;
             }
 
@@ -178,7 +178,7 @@ namespace Stateless
                 return OnEntryFrom(
                     trigger,
                     t => entryAction(),
-                    entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    entryActionDescription);
             }
 
             /// <summary>
@@ -195,7 +195,7 @@ namespace Stateless
                 _representation.AddEntryAction(
                     trigger,
                     (t, args) => entryAction(t),
-                    entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    entryActionDescription);
                 return this;
             }
 
@@ -214,7 +214,7 @@ namespace Stateless
                 return OnEntryFrom<TArg0>(
                     trigger,
                     (a0, t) => entryAction(a0),
-                    entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    entryActionDescription);
             }
 
             /// <summary>
@@ -234,7 +234,7 @@ namespace Stateless
                     trigger.Trigger,
                     (t, args) => entryAction(
                         ParameterConversion.Unpack<TArg0>(args, 0), t),
-                        entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                        entryActionDescription);
                 return this;
             }
 
@@ -253,7 +253,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntryFrom<TArg0, TArg1>(
                     trigger, 
-                    (a0, a1, t) => entryAction(a0, a1), entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    (a0, a1, t) => entryAction(a0, a1), entryActionDescription);
             }
 
             /// <summary>
@@ -272,7 +272,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(trigger, "trigger");
                 _representation.AddEntryAction(trigger.Trigger, (t, args) => entryAction(
                     ParameterConversion.Unpack<TArg0>(args, 0),
-                    ParameterConversion.Unpack<TArg1>(args, 1), t), entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    ParameterConversion.Unpack<TArg1>(args, 1), t), entryActionDescription);
                 return this;
             }
 
@@ -292,7 +292,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntryFrom<TArg0, TArg1, TArg2>(
                     trigger, 
-                    (a0, a1, a2, t) => entryAction(a0, a1, a2), entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    (a0, a1, a2, t) => entryAction(a0, a1, a2), entryActionDescription);
             }
 
             /// <summary>
@@ -313,7 +313,7 @@ namespace Stateless
                 _representation.AddEntryAction(trigger.Trigger, (t, args) => entryAction(
                     ParameterConversion.Unpack<TArg0>(args, 0),
                     ParameterConversion.Unpack<TArg1>(args, 1),
-                    ParameterConversion.Unpack<TArg2>(args, 2), t), entryActionDescription != null ? entryActionDescription : entryAction.Method.Name);
+                    ParameterConversion.Unpack<TArg2>(args, 2), t), entryActionDescription);
                 return this;
             }
 
@@ -329,7 +329,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(exitAction, "exitAction");
                 return OnExit(
                     t => exitAction(),
-                    exitActionDescription != null ? exitActionDescription : exitAction.Method.Name);
+                    exitActionDescription);
             }
 
             /// <summary>
@@ -344,7 +344,7 @@ namespace Stateless
                 Enforce.ArgumentNotNull(exitAction, "exitAction");
                 _representation.AddExitAction(
                     exitAction,
-                    exitActionDescription != null ? exitActionDescription : exitAction.Method.Name);
+                    exitActionDescription);
                 return this;
             }
 

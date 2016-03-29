@@ -71,29 +71,49 @@ namespace Stateless
             public void AddEntryAction(TTrigger trigger, Action<Transition, object[]> action, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(action, "action");
+
+                if (entryActionDescription == null)
+                {
+                    entryActionDescription = action.Method.Name;
+                }
+
                 _entryActions.Add(
                     new EntryActionBehavior((t, args) =>
                     {
                         if (t.Trigger.Equals(trigger))
                             action(t, args);
                     },
-                    Enforce.ArgumentNotNull(entryActionDescription, "entryActionDescription")));
+                    entryActionDescription));
             }
 
             public void AddEntryAction(Action<Transition, object[]> action, string entryActionDescription)
             {
+                Enforce.ArgumentNotNull(action, "action");
+
+                if (entryActionDescription == null)
+                {
+                    entryActionDescription = action.Method.Name;
+                }
+
                 _entryActions.Add(
                     new EntryActionBehavior(
-                        Enforce.ArgumentNotNull(action, "action"),
-                        Enforce.ArgumentNotNull(entryActionDescription, "entryActionDescription")));
+                        action,
+                        entryActionDescription));
             }
 
             public void AddExitAction(Action<Transition> action, string exitActionDescription)
             {
+                Enforce.ArgumentNotNull(action, "action");
+
+                if (exitActionDescription == null)
+                {
+                    exitActionDescription = action.Method.Name;
+                }
+
                 _exitActions.Add(
                     new ExitActionBehavior(
-                        Enforce.ArgumentNotNull(action, "action"),
-                        Enforce.ArgumentNotNull(exitActionDescription, "exitActionDescription")));
+                        action,
+                        exitActionDescription));
             }
 
             public void Enter(Transition transition, params object[] entryArgs)
