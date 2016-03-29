@@ -86,6 +86,13 @@ namespace Stateless
                     entryActionDescription));
             }
 
+            public void AddEntryAction(TTrigger trigger, Action<Transition, object[]> action)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                AddEntryAction(trigger, action, null);
+            }
+
+
             public void AddEntryAction(Action<Transition, object[]> action, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(action, "action");
@@ -101,6 +108,13 @@ namespace Stateless
                         entryActionDescription));
             }
 
+            public void AddEntryAction(Action<Transition, object[]> action)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                AddEntryAction(action, null);
+            }
+
+
             public void AddExitAction(Action<Transition> action, string exitActionDescription)
             {
                 Enforce.ArgumentNotNull(action, "action");
@@ -115,6 +129,13 @@ namespace Stateless
                         action,
                         exitActionDescription));
             }
+
+            public void AddExitAction(Action<Transition> action)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                AddExitAction(action, null);
+            }
+
 
             public void Enter(Transition transition, params object[] entryArgs)
             {

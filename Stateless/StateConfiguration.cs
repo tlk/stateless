@@ -57,7 +57,7 @@ namespace Stateless
             /// trigger to be accepted.</param>
             /// <param name="guardDescription">Guard description</param>
             /// <returns>The reciever.</returns>
-            public StateConfiguration PermitIf(TTrigger trigger, TState destinationState, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration PermitIf(TTrigger trigger, TState destinationState, Func<bool> guard, string guardDescription)
             {
                 EnforceNotIdentityTransition(destinationState);
                 return InternalPermitIf(
@@ -66,6 +66,22 @@ namespace Stateless
                     guard,
                     guardDescription);
             }
+
+            /// <summary>
+            /// Accept the specified trigger and transition to the destination state.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="destinationState">The state that the trigger will cause a
+            /// transition to.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
+            /// <returns>The reciever.</returns>
+            public StateConfiguration PermitIf(TTrigger trigger, TState destinationState, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitIf(trigger, destinationState, guard, null);
+            }
+
 
             /// <summary>
             /// Accept the specified trigger, execute exit actions and re-execute entry actions.
@@ -95,7 +111,7 @@ namespace Stateless
             /// Applies to the current state only. Will not re-execute superstate actions, or
             /// cause actions to execute transitioning between super- and sub-states.
             /// </remarks>
-            public StateConfiguration PermitReentryIf(TTrigger trigger, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration PermitReentryIf(TTrigger trigger, Func<bool> guard, string guardDescription)
             {
                 return InternalPermitIf(
                     trigger,
@@ -103,6 +119,26 @@ namespace Stateless
                     guard,
                     guardDescription);
             }
+
+            /// <summary>
+            /// Accept the specified trigger, execute exit actions and re-execute entry actions.
+            /// Reentry behaves as though the configured state transitions to an identical sibling state.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
+            /// <returns>The reciever.</returns>
+            /// <remarks>
+            /// Applies to the current state only. Will not re-execute superstate actions, or
+            /// cause actions to execute transitioning between super- and sub-states.
+            /// </remarks>
+            public StateConfiguration PermitReentryIf(TTrigger trigger, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitReentryIf(trigger, guard, null);
+            }
+
+
             /// <summary>
             /// Ignore the specified trigger when in the configured state.
             /// </summary>
@@ -122,7 +158,7 @@ namespace Stateless
             /// <param name="guard">Function that must return true in order for the
             /// trigger to be ignored.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration IgnoreIf(TTrigger trigger, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration IgnoreIf(TTrigger trigger, Func<bool> guard, string guardDescription)
             {
                 Enforce.ArgumentNotNull(guard, "guard");
                 _representation.AddTriggerBehaviour(
@@ -134,13 +170,28 @@ namespace Stateless
             }
 
             /// <summary>
+            /// Ignore the specified trigger when in the configured state, if the guard
+            /// returns true..
+            /// </summary>
+            /// <param name="trigger">The trigger to ignore.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be ignored.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration IgnoreIf(TTrigger trigger, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return IgnoreIf(trigger, guard, null);
+            }
+
+
+            /// <summary>
             /// Specify an action that will execute when transitioning into
             /// the configured state.
             /// </summary>
             /// <param name="entryAction">Action to execute.</param>
             /// <param name="entryActionDescription">Action description.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration OnEntry(Action entryAction, string entryActionDescription = null)
+            public StateConfiguration OnEntry(Action entryAction, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntry(
@@ -152,10 +203,23 @@ namespace Stateless
             /// Specify an action that will execute when transitioning into
             /// the configured state.
             /// </summary>
+            /// <param name="entryAction">Action to execute.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration OnEntry(Action entryAction)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return OnEntry(entryAction, null);
+            }
+
+
+            /// <summary>
+            /// Specify an action that will execute when transitioning into
+            /// the configured state.
+            /// </summary>
             /// <param name="entryAction">Action to execute, providing details of the transition.</param>
             /// <param name="entryActionDescription">Action description.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration OnEntry(Action<Transition> entryAction, string entryActionDescription = null)
+            public StateConfiguration OnEntry(Action<Transition> entryAction, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 _representation.AddEntryAction(
@@ -168,11 +232,24 @@ namespace Stateless
             /// Specify an action that will execute when transitioning into
             /// the configured state.
             /// </summary>
+            /// <param name="entryAction">Action to execute, providing details of the transition.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration OnEntry(Action<Transition> entryAction)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return OnEntry(entryAction, null);
+            }
+
+
+            /// <summary>
+            /// Specify an action that will execute when transitioning into
+            /// the configured state.
+            /// </summary>
             /// <param name="entryAction">Action to execute.</param>
             /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
             /// <param name="entryActionDescription">Action description.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration OnEntryFrom(TTrigger trigger, Action entryAction, string entryActionDescription = null)
+            public StateConfiguration OnEntryFrom(TTrigger trigger, Action entryAction, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntryFrom(
@@ -185,11 +262,25 @@ namespace Stateless
             /// Specify an action that will execute when transitioning into
             /// the configured state.
             /// </summary>
+            /// <param name="entryAction">Action to execute.</param>
+            /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration OnEntryFrom(TTrigger trigger, Action entryAction)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return OnEntryFrom(trigger, entryAction, null);
+            }
+
+
+            /// <summary>
+            /// Specify an action that will execute when transitioning into
+            /// the configured state.
+            /// </summary>
             /// <param name="entryAction">Action to execute, providing details of the transition.</param>
             /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
             /// <param name="entryActionDescription">Action description.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration OnEntryFrom(TTrigger trigger, Action<Transition> entryAction, string entryActionDescription = null)
+            public StateConfiguration OnEntryFrom(TTrigger trigger, Action<Transition> entryAction, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 _representation.AddEntryAction(
@@ -203,12 +294,26 @@ namespace Stateless
             /// Specify an action that will execute when transitioning into
             /// the configured state.
             /// </summary>
+            /// <param name="entryAction">Action to execute, providing details of the transition.</param>
+            /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration OnEntryFrom(TTrigger trigger, Action<Transition> entryAction)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return OnEntryFrom(trigger, entryAction, null);
+            }
+
+
+            /// <summary>
+            /// Specify an action that will execute when transitioning into
+            /// the configured state.
+            /// </summary>
             /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
             /// <param name="entryAction">Action to execute, providing details of the transition.</param>
             /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
             /// <param name="entryActionDescription">Action description.</param>
             /// <returns>The receiver.</returns>
-            public StateConfiguration OnEntryFrom<TArg0>(TriggerWithParameters<TArg0> trigger, Action<TArg0> entryAction, string entryActionDescription = null)
+            public StateConfiguration OnEntryFrom<TArg0>(TriggerWithParameters<TArg0> trigger, Action<TArg0> entryAction, string entryActionDescription)
             {
                 Enforce.ArgumentNotNull(entryAction, "entryAction");
                 return OnEntryFrom<TArg0>(
@@ -216,6 +321,21 @@ namespace Stateless
                     (a0, t) => entryAction(a0),
                     entryActionDescription);
             }
+
+            /// <summary>
+            /// Specify an action that will execute when transitioning into
+            /// the configured state.
+            /// </summary>
+            /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
+            /// <param name="entryAction">Action to execute, providing details of the transition.</param>
+            /// <param name="trigger">The trigger by which the state must be entered in order for the action to execute.</param>
+            /// <returns>The receiver.</returns>
+            public StateConfiguration OnEntryFrom<TArg0>(TriggerWithParameters<TArg0> trigger, Action<TArg0> entryAction)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return OnEntryFrom(trigger, entryAction, null);
+            }
+
 
             /// <summary>
             /// Specify an action that will execute when transitioning into
@@ -438,7 +558,7 @@ namespace Stateless
             /// trigger to be accepted.</param>
             /// <param name="guardDescription">Guard description</param>
             /// <returns>The reciever.</returns>
-            public StateConfiguration PermitDynamicIf(TTrigger trigger, Func<TState> destinationStateSelector, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration PermitDynamicIf(TTrigger trigger, Func<TState> destinationStateSelector, Func<bool> guard, string guardDescription)
             {
                 Enforce.ArgumentNotNull(destinationStateSelector, "destinationStateSelector");
                 return InternalPermitDynamicIf(
@@ -457,10 +577,27 @@ namespace Stateless
             /// that the trigger will cause a transition to.</param>
             /// <param name="guard">Function that must return true in order for the
             /// trigger to be accepted.</param>
+            /// <returns>The reciever.</returns>
+            public StateConfiguration PermitDynamicIf(TTrigger trigger, Func<TState> destinationStateSelector, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitDynamicIf(trigger, destinationStateSelector, guard, null);
+            }
+
+
+            /// <summary>
+            /// Accept the specified trigger and transition to the destination state, calculated
+            /// dynamically by the supplied function.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="destinationStateSelector">Function to calculate the state 
+            /// that the trigger will cause a transition to.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
             /// <param name="guardDescription">Guard description</param>
             /// <returns>The reciever.</returns>
             /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
-            public StateConfiguration PermitDynamicIf<TArg0>(TriggerWithParameters<TArg0> trigger, Func<TArg0, TState> destinationStateSelector, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration PermitDynamicIf<TArg0>(TriggerWithParameters<TArg0> trigger, Func<TArg0, TState> destinationStateSelector, Func<bool> guard, string guardDescription)
             {
                 Enforce.ArgumentNotNull(trigger, "trigger");
                 Enforce.ArgumentNotNull(destinationStateSelector, "destinationStateSelector");
@@ -481,11 +618,29 @@ namespace Stateless
             /// that the trigger will cause a transition to.</param>
             /// <param name="guard">Function that must return true in order for the
             /// trigger to be accepted.</param>
+            /// <returns>The reciever.</returns>
+            /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
+            public StateConfiguration PermitDynamicIf<TArg0>(TriggerWithParameters<TArg0> trigger, Func<TArg0, TState> destinationStateSelector, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitDynamicIf(trigger, destinationStateSelector, guard, null);
+            }
+
+
+            /// <summary>
+            /// Accept the specified trigger and transition to the destination state, calculated
+            /// dynamically by the supplied function.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="destinationStateSelector">Function to calculate the state 
+            /// that the trigger will cause a transition to.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
             /// <param name="guardDescription">Guard description</param>
             /// <returns>The reciever.</returns>
             /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
             /// <typeparam name="TArg1">Type of the second trigger argument.</typeparam>
-            public StateConfiguration PermitDynamicIf<TArg0, TArg1>(TriggerWithParameters<TArg0, TArg1> trigger, Func<TArg0, TArg1, TState> destinationStateSelector, Func<bool> guard, string guardDescription = null)
+            public StateConfiguration PermitDynamicIf<TArg0, TArg1>(TriggerWithParameters<TArg0, TArg1> trigger, Func<TArg0, TArg1, TState> destinationStateSelector, Func<bool> guard, string guardDescription)
             {
                 Enforce.ArgumentNotNull(trigger, "trigger");
                 Enforce.ArgumentNotNull(destinationStateSelector, "destinationStateSelector");
@@ -497,6 +652,25 @@ namespace Stateless
                     guard,
                     guardDescription);
             }
+
+            /// <summary>
+            /// Accept the specified trigger and transition to the destination state, calculated
+            /// dynamically by the supplied function.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="destinationStateSelector">Function to calculate the state 
+            /// that the trigger will cause a transition to.</param>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
+            /// <returns>The reciever.</returns>
+            /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
+            /// <typeparam name="TArg1">Type of the second trigger argument.</typeparam>
+            public StateConfiguration PermitDynamicIf<TArg0, TArg1>(TriggerWithParameters<TArg0, TArg1> trigger, Func<TArg0, TArg1, TState> destinationStateSelector, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitDynamicIf(trigger, destinationStateSelector, guard, null);
+            }
+
 
             /// <summary>
             /// Accept the specified trigger and transition to the destination state, calculated
@@ -525,6 +699,26 @@ namespace Stateless
                     guard,
                     guardDescription);
             }
+
+            /// <summary>
+            /// Accept the specified trigger and transition to the destination state, calculated
+            /// dynamically by the supplied function.
+            /// </summary>
+            /// <param name="trigger">The accepted trigger.</param>
+            /// <param name="destinationStateSelector">Function to calculate the state 
+            /// that the trigger will cause a transition to.</param>
+            /// <returns>The reciever.</returns>
+            /// <param name="guard">Function that must return true in order for the
+            /// trigger to be accepted.</param>
+            /// <typeparam name="TArg0">Type of the first trigger argument.</typeparam>
+            /// <typeparam name="TArg1">Type of the second trigger argument.</typeparam>
+            /// <typeparam name="TArg2">Type of the third trigger argument.</typeparam>
+            public StateConfiguration PermitDynamicIf<TArg0, TArg1, TArg2>(TriggerWithParameters<TArg0, TArg1, TArg2> trigger, Func<TArg0, TArg1, TArg2, TState> destinationStateSelector, Func<bool> guard)
+            {
+                // Use overloaded method instead of optional parameter. Prevents System.MissingMethodException on projects compiled pre 2.5.36.
+                return PermitDynamicIf(trigger, destinationStateSelector, guard, null); 
+            }
+
 
             void EnforceNotIdentityTransition(TState destination)
             {
