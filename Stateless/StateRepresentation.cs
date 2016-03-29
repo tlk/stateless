@@ -70,35 +70,35 @@ namespace Stateless
 
             public void AddEntryAction(TTrigger trigger, Action<Transition, object[]> action, string entryActionDescription)
             {
-                Enforce.ArgumentNotNull(action, nameof(action));
+                Enforce.ArgumentNotNull(action, "action");
                 _entryActions.Add(
                     new EntryActionBehavior((t, args) =>
                     {
                         if (t.Trigger.Equals(trigger))
                             action(t, args);
                     },
-                    Enforce.ArgumentNotNull(entryActionDescription, nameof(entryActionDescription))));
+                    Enforce.ArgumentNotNull(entryActionDescription, "entryActionDescription")));
             }
 
             public void AddEntryAction(Action<Transition, object[]> action, string entryActionDescription)
             {
                 _entryActions.Add(
                     new EntryActionBehavior(
-                        Enforce.ArgumentNotNull(action, nameof(action)),
-                        Enforce.ArgumentNotNull(entryActionDescription, nameof(entryActionDescription))));
+                        Enforce.ArgumentNotNull(action, "action"),
+                        Enforce.ArgumentNotNull(entryActionDescription, "entryActionDescription")));
             }
 
             public void AddExitAction(Action<Transition> action, string exitActionDescription)
             {
                 _exitActions.Add(
                     new ExitActionBehavior(
-                        Enforce.ArgumentNotNull(action, nameof(action)),
-                        Enforce.ArgumentNotNull(exitActionDescription, nameof(exitActionDescription))));
+                        Enforce.ArgumentNotNull(action, "action"),
+                        Enforce.ArgumentNotNull(exitActionDescription, "exitActionDescription")));
             }
 
             public void Enter(Transition transition, params object[] entryArgs)
             {
-                Enforce.ArgumentNotNull(transition, nameof(transition));
+                Enforce.ArgumentNotNull(transition, "transition");
 
                 if (transition.IsReentry)
                 {
@@ -115,7 +115,7 @@ namespace Stateless
 
             public void Exit(Transition transition)
             {
-                Enforce.ArgumentNotNull(transition, nameof(transition));
+                Enforce.ArgumentNotNull(transition, "transition");
 
                 if (transition.IsReentry)
                 {
@@ -131,15 +131,15 @@ namespace Stateless
 
             void ExecuteEntryActions(Transition transition, object[] entryArgs)
             {
-                Enforce.ArgumentNotNull(transition, nameof(transition));
-                Enforce.ArgumentNotNull(entryArgs, nameof(entryArgs));
+                Enforce.ArgumentNotNull(transition, "transition");
+                Enforce.ArgumentNotNull(entryArgs, "entryArgs");
                 foreach (var action in _entryActions)
                     action.Action(transition, entryArgs);
             }
 
             void ExecuteExitActions(Transition transition)
             {
-                Enforce.ArgumentNotNull(transition, nameof(transition));
+                Enforce.ArgumentNotNull(transition, "transition");
                 foreach (var action in _exitActions)
                     action.Action(transition);
             }
@@ -177,7 +177,7 @@ namespace Stateless
 
             public void AddSubstate(StateRepresentation substate)
             {
-                Enforce.ArgumentNotNull(substate, nameof(substate));
+                Enforce.ArgumentNotNull(substate, "substate");
                 _substates.Add(substate);
             }
 

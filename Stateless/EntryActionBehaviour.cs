@@ -15,7 +15,7 @@ namespace Stateless
             public EntryActionBehavior(Action<Transition, object[]> action, string actionDescription)
             {
                 _action = action;
-                _actionDescription = Enforce.ArgumentNotNull(actionDescription, nameof(actionDescription));
+                _actionDescription = Enforce.ArgumentNotNull(actionDescription, "actionDescription");
             }
 
             internal string ActionDescription { get { return _actionDescription; } }
